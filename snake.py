@@ -1,7 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-import os, sys, random
+
+import os
+import sys
+import random
 import pygame
+from ui import ui
 from pygame.sprite import Sprite
 
 #sys.stdout = os.devnull
@@ -50,6 +54,8 @@ class game(object):
 	def __init__(self):
 		self.screen = None
 		self.playerBox = None
+		self.ui = None
+		
 
 	def move(self, direction):
 		#print 'direction:', direction
@@ -138,14 +144,9 @@ class game(object):
 				f.write(highscores)
 				f.close()
 			
-			lines = ['GAME OVER', 'POINTS: ' + str(scores), "HIGHSCORE "+highscores, "Button / Keyboard: 1 = Speed Up", "Button / Keyboard: 2 = Speed Down", "R = restart / respawn", 'Q = Quit / Exit']
-			fontSize = 30
-			fnt = pygame.font.SysFont("MS Comic Sans", fontSize)
-			xPos = (self.SCREEN_WIDTH / 2)
-			#print fnt.size(resultText)
-			for i in range(len(lines)):
-				txt = lines[i]
-				self.screen.blit(fnt.render(txt, 1, (0,0,255)), ( xPos - (fnt.size(txt)[0] / 2), 250 +(i * fontSize)))
+			
+			self.iUi.addSimpleMenu("gameOver", ["GAME OVER", "POINTS: " + str(scores), "HIGHSCORE "+highscores, "Button / Keyboard: 1 = Speed Up", "Button / Keyboard: 2 = Speed Down", "R = restart / respawn", "Q = Quit / Exit"])
+			self.iUi.draw("gameOver")
 
 		return dead
 
@@ -187,9 +188,13 @@ class game(object):
 		pygame.mouse.set_visible(False)
 		
 		self.screen = pygame.display.set_mode( (self.SCREEN_WIDTH, self.SCREEN_HEIGHT), 0, 32)
-		pygame.display.toggle_fullscreen()
+		#TODO: make it optional
+		#pygame.display.toggle_fullscreen()
 		clock = pygame.time.Clock()
 		redrawCount = 0
+		
+		# init the menu, add stuff later
+		self.iUi = ui(self.screen)
 		
 		pygame.joystick.init()
 		self.myJoystick = None
