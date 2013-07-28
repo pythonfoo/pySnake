@@ -183,7 +183,7 @@ class game(object):
 		pygame.init()
 		
 		# do fancy window stuff
-		pygame.display.set_caption("SNAKE")
+		pygame.display.set_caption("pySnake")
 		#pygame.display.set_icon(pygame.image.load('imgs/bandit.jpg'))
 		pygame.mouse.set_visible(False)
 		
