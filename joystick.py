@@ -1,5 +1,6 @@
 import pygame
 
+
 class joystick(object):
 	def __init__(self):
 		self.joystick_names = []
@@ -12,22 +13,23 @@ class joystick(object):
 			self.joystick_names.append(pygame.joystick.Joystick(i).get_name())
 
 		# By default, load the first available joystick.
-		if (len(self.joystick_names) > 0):
+		if len(self.joystick_names) > 0:
 			self.myJoystick = pygame.joystick.Joystick(0)
 			self.myJoystick.init()
 
 	def joystickAvailable(self):
-		if self.myJoystick != None:
+		if self.myJoystick is not None:
 			return True
 		else:
 			return False
 
 	def getAction(self):
 		action = ""
-		if self.myJoystick != None:
+		if self.myJoystick is not None:
 			try:
 				xAx = 0
 				yAx = 0
+
 				# sometimes 2 axis, sometimes 6, wtf?!
 				if self.myJoystick.get_numaxes() == 2:
 					xAx = 0
@@ -39,25 +41,25 @@ class joystick(object):
 					self.doMove = 2
 				elif self.myJoystick.get_axis(xAx) < 0:
 					self.doMove = 4
-				elif  self.myJoystick.get_axis(yAx) > 0:
+				elif self.myJoystick.get_axis(yAx) > 0:
 					self.doMove = 3
-				elif  self.myJoystick.get_axis(yAx) < 0:
+				elif self.myJoystick.get_axis(yAx) < 0:
 					self.doMove = 1
 
-				if self.myJoystick.get_button(0) and self.joyButtonDown == False: # speed up
+				if self.myJoystick.get_button(0) and self.joyButtonDown is False:  # speed up
 					action = "speedUp"
-				elif self.myJoystick.get_button(1) and self.joyButtonDown == False: # speed down
+				elif self.myJoystick.get_button(1) and self.joyButtonDown is False:  # speed down
 					action = "speedDown"
-				elif (self.myJoystick.get_button(9) and self.joyButtonDown == False)\
-					or (self.myJoystick.get_button(3) and self.joyButtonDown == False): # (re)start
+				elif (self.myJoystick.get_button(9) and self.joyButtonDown is False)\
+					or (self.myJoystick.get_button(3) and self.joyButtonDown is False):  # (re)start
 					action = "restart"
-				elif (self.myJoystick.get_button(8) and self.joyButtonDown == False):
+				elif self.myJoystick.get_button(8) and self.joyButtonDown is False:
 					action = 'quit'
 				#else:
 				# make sure NO button is down for reset
 				someJoyButtonDown = False
 				for i in range(0, self.myJoystick.get_numbuttons()):
-					if (self.myJoystick.get_button(i)):
+					if self.myJoystick.get_button(i) is True:
 						someJoyButtonDown = True
 				self.joyButtonDown = someJoyButtonDown
 

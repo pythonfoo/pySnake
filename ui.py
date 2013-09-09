@@ -6,13 +6,14 @@
 import pygame
 import sys
 
+
 class ui(object):
 	def __init__(self, screen):
 		
 		# the main screen, result from:
 		# pygame.display.set_mode(...)
 		self._screen = screen
-		self.keymap = {pygame.K_UP:1, pygame.K_RIGHT:2, pygame.K_DOWN:3, pygame.K_LEFT:4} #pygame.K_RETURN:5}
+		self.keymap = {pygame.K_UP: 1, pygame.K_RIGHT: 2, pygame.K_DOWN: 3, pygame.K_LEFT: 4}  # pygame.K_RETURN:5}
 		self.selectedColor = (245, 101, 44)  # orange ;)
 		self.nextAction = None
 		
@@ -42,25 +43,31 @@ class ui(object):
 		return canInteract
 	
 	def addMenu(self, menuKey, menuRows):
-		''' add an menu
-		menuKey: unique name of the menu
-		menuRows: [
+		""" add an menu
+		@menuKey: unique name of the menu
+		@menuRows: [
 					{"rowName":"title", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"UserInterfaceGenerator"},
 					{"rowName":"start", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"Start Game"},
 					{"rowName":"q", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"QUIT"}
 					]
-		'''
+		"""
 		self.menus[menuKey] = menuRows
 
 	def addSimpleMenu(self, menuKey, menuRows, font="MS Comic Sans", size=30, color=(245, 101, 44)):
-		''' add an SIMPLE menu
-		menuKey: unique name of the menu
-		menueRows: ["You Shall", "NOT PASS"]
-		'''
+		""" add an SIMPLE menu
+			@menuKey: unique name of the menu
+			@menueRows: ["You Shall", "NOT PASS"]
+		"""
 		menu = []
 		rowCount = 0
 		for row in menuRows:
-			menu.append({"rowName":"simple_" + str(rowCount), "selectable":False, "font":font, "fontSize":size, "color":color, "text":row})
+			menu.append({"rowName": "simple_" + str(rowCount),
+						"selectable": False,
+						"font": font,
+						"fontSize": size,
+						"color": color,
+						"text": row}
+			)
 		
 		self.menus[menuKey] = menu
 
@@ -73,9 +80,9 @@ class ui(object):
 		return indexList
 
 	def selectMenuItem(self, direction=0):
-		''' select the menu item
-		direction: +1 (down) or -1 (up), 0 for the first selectable item in the current menu
-		'''
+		""" select the menu item
+			@direction: +1 (down) or -1 (up), 0 for the first selectable item in the current menu
+		"""
 		#self._selectedIndex
 
 		indexList = self.__getAvailableIndexes()
@@ -119,7 +126,7 @@ class ui(object):
 			if self._selectedMenu == '' and 'main' in self.menus:
 				self._selectedMenu = 'main'
 		else:
-			raise Exception("Error menu '"+ menuKey +"' does not exist and there is no 'main' menu")
+			raise Exception("Error menu '" + menuKey + "' does not exist and there is no 'main' menu")
 
 		menuToDraw = self.menus[self._selectedMenu]
 
@@ -131,7 +138,7 @@ class ui(object):
 			menuRowsCount = len(menuToDraw)
 			for i in range(menuRowsCount):
 				fontSize = menuToDraw[i]["fontSize"]
-				fnt = pygame.font.SysFont(menuToDraw[i]["font"] , fontSize)
+				fnt = pygame.font.SysFont(menuToDraw[i]["font"], fontSize)
 				xPos = (self._screen.get_width() / 2)
 				yPos = (self._screen.get_height() / 30) * menuRowsCount
 				txt = menuToDraw[i]["text"]
@@ -140,13 +147,13 @@ class ui(object):
 				if i == self._selectedMenuItemIndex:
 					color = self.selectedColor
 
-				self._screen.blit(fnt.render(txt, 1, color), ( xPos - (fnt.size(txt)[0] / 2), yPos +(i * fontSize)))
+				self._screen.blit(fnt.render(txt, 1, color), (xPos - (fnt.size(txt)[0] / 2), yPos + (i * fontSize)))
 		else:
-			raise Exception("Error menu '"+ menuKey +"' does not exist")
+			raise Exception("Error menu '" + menuKey + "' does not exist")
 		
 if __name__ == "__main__":
 	pygame.init()
-	screen = pygame.display.set_mode( (1024, 768), 0, 32)
+	screen = pygame.display.set_mode((1024, 768), 0, 32)
 	clock = pygame.time.Clock()
 	
 	BG_COLOR = (8, 13, 41)
