@@ -59,7 +59,7 @@ class joystick(object):
 				# make sure NO button is down for reset
 				someJoyButtonDown = False
 				for i in range(0, self.myJoystick.get_numbuttons()):
-					if self.myJoystick.get_button(i) is True:
+					if self.myJoystick.get_button(i) == True:
 						someJoyButtonDown = True
 				self.joyButtonDown = someJoyButtonDown
 
