@@ -6,6 +6,7 @@ import sys
 import random
 import pygame
 from ui import ui
+from joystick import joystick
 from pygame.sprite import Sprite
 
 #sys.stdout = os.devnull
@@ -197,17 +198,8 @@ class game(object):
 		self.iUi = ui(self.screen)
 		
 		pygame.joystick.init()
-		self.myJoystick = None
-		self.joystick_names = []
+		self.joystickInteract = joystick()
 
-		# Enumerate joysticks
-		for i in range(0, pygame.joystick.get_count()):
-			self.joystick_names.append(pygame.joystick.Joystick(i).get_name())
-
-		# By default, load the first available joystick.
-		if (len(self.joystick_names) > 0):
-			self.myJoystick = pygame.joystick.Joystick(0)
-			self.myJoystick.init()
 		
 		keymap = {pygame.K_UP:1, pygame.K_RIGHT:2, pygame.K_DOWN:3, pygame.K_LEFT:4}
 
@@ -221,7 +213,7 @@ class game(object):
 		#
 		gameOver = False
 		doMove = -1
-		joyButtonDown = False
+		#joyButtonDown = False
 		while True:
 			if self.playerBox == None:
 				self.resetGame()
@@ -231,44 +223,18 @@ class game(object):
 			time_passed = clock.tick(50)
 			redrawCount += time_passed
 			worldChanged = False
-			
-			if self.myJoystick != None:
-				xAx = 0
-				yAx = 0
-				# sometimes 2 axis, sometimes 6, wtf?!
-				if self.myJoystick.get_numaxes() == 2:
-					xAx = 0
-					yAx = 1
-				else:
-					xAx = 3
-					yAx = 4
-				if self.myJoystick.get_axis(xAx) > 0:
-					doMove = 2
-				elif self.myJoystick.get_axis(xAx) < 0:
-					doMove = 4
-				elif  self.myJoystick.get_axis(yAx) > 0:
-					doMove = 3
-				elif  self.myJoystick.get_axis(yAx) < 0:
-					doMove = 1
-				
-				if self.myJoystick.get_button(0) and joyButtonDown == False: # speed up
-					joyButtonDown = True
+
+			if self.joystickInteract.joystickAvailable():
+				if self.joystickInteract.haveAction() == "move":
+					doMove = self.joystickInteract.getMoveAction()
+				elif  self.joystickInteract.haveAction() == "speedUp":
 					self.gameSpeedUp()
-				elif self.myJoystick.get_button(1) and joyButtonDown == False: # speed down
-					joyButtonDown = True
+				elif self.joystickInteract.haveAction() == "speedDown":
 					self.gameSpeedDown()
-				elif self.myJoystick.get_button(9) and joyButtonDown == False: # (re)start
-					joyButtonDown = True
+				elif self.joystickInteract.haveAction() == "restart":
 					self.resetGame()
-					gameOver = False
-				else:
-					# make shure NO button is down for reset
-					someJoyButtonDown = False
-					for i in range(0, self.myJoystick.get_numbuttons()):
-						if (self.myJoystick.get_button(i)):
-							someJoyButtonDown = True
-					joyButtonDown = someJoyButtonDown
-			
+
+
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.exit_game()
