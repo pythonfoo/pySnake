@@ -7,5 +7,6 @@ tiny snake in Python pygame
 ## FEATURES
 
 * Joystick and GamePad support
-* fullscreen and window mode
+* touchscreen compatible
+* full screen and window mode
 * fully customizable

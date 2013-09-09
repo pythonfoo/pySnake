@@ -10,6 +10,7 @@ import conf
 from ui import ui
 from joystick import joystick
 from popUp import popUp
+from touchScreen import touchScreen
 #from pygame.sprite import Sprite
 
 #sys.stdout = os.devnull
@@ -62,6 +63,7 @@ class game(object):
 		self.playerBox = None
 		self.ui = None
 		self.popUp = None
+		self.touchScreen = None
 		
 	def move(self, direction):
 		#print 'direction:', direction
@@ -232,6 +234,7 @@ class game(object):
 		self.iUi = ui(self.screen)
 		self.popUp = popUp(self.screen)
 		self.popUp.color = conf.FONT_COLOR
+		self.touchScreen = touchScreen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
 		
 		pygame.joystick.init()
 		self.joystickInteract = joystick()
@@ -291,7 +294,16 @@ class game(object):
 				else:
 					pass
 					#print event
-			
+
+			if conf.TOUCH_SCREEN:
+				mouseAction = self.touchScreen.getEventBoxes()
+				if mouseAction > 0:
+					if gameOver:
+						self.resetGame()
+						gameOver = False
+					else:
+						doMove = mouseAction
+
 			if gameOver is False and redrawCount >= (self.gameSpeed - self.gameSpeedFactors[self.gameSpeedFactor]):
 				# ONLY move, when the timer elapses!
 				# otherwise you could change the direction multiple times before the scenery changes and upates
@@ -328,6 +340,9 @@ class game(object):
 				# update elements
 				for elem in reversed(self.elements):
 					elem.blit()
+
+				# draw touchscreen
+				# TODO: draw touch areas
 
 				# draw pop ups
 				self.popUp.drawPopUps()
