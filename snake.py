@@ -141,7 +141,7 @@ class game(object):
 			or self.playerBox.y > (self.SCREEN_HEIGHT / self.BLOCKSIZE)-1:
 			dead = True
 			
-		if dead == True:
+		if dead:
 			highscores = '0'
 			scores = self.getBodyLen()
 			if os.path.isfile("highscore.txt") is True:
@@ -160,7 +160,7 @@ class game(object):
 									"Button / Keyboard: 2 = Speed Up",
 									"Button / Keyboard: 1 = Speed Down",
 									"R = restart / respawn",
-									"Q = Quit / Exit"])
+									"Q = Quit / Exit"], color=conf.FONT_COLOR)
 			self.iUi.draw("gameOver")
 
 		return dead
@@ -231,6 +231,7 @@ class game(object):
 		# init the menu, add stuff later
 		self.iUi = ui(self.screen)
 		self.popUp = popUp(self.screen)
+		self.popUp.color = conf.FONT_COLOR
 		
 		pygame.joystick.init()
 		self.joystickInteract = joystick()

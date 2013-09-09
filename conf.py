@@ -10,6 +10,9 @@ WINDOW_POSITION_X = 0
 WINDOW_POSITION_Y = 0
 WINDOW_BORDER = False
 
+# UI settings
+FONT_COLOR = (255, 226, 165)
+
 # game settings
 BLOCKSIZE = 25
 SNACKS = 10
