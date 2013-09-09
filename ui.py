@@ -12,7 +12,7 @@ class ui(object):
 		# the main screen, result from:
 		# pygame.display.set_mode(...)
 		self._screen = screen
-		self.keymap = {pygame.K_UP:1, pygame.K_RIGHT:2, pygame.K_DOWN:3, pygame.K_LEFT:4}
+		self.keymap = {pygame.K_UP:1, pygame.K_RIGHT:2, pygame.K_DOWN:3, pygame.K_LEFT:4} #pygame.K_RETURN:5}
 		self.selectedColor = (245, 101, 44)  # orange ;)
 		self.nextAction = None
 		
@@ -32,6 +32,8 @@ class ui(object):
 				self.selectMenuItem(-1)
 			elif self.nextAction == 3:  # DOWN
 				self.selectMenuItem(1)
+			elif self.nextAction == 5:  # SELECTED
+				pass
 		else:
 			# reset the action if multiple times pressed keys before
 			# actually did something
@@ -78,7 +80,7 @@ class ui(object):
 
 		indexList = self.__getAvailableIndexes()
 		if len(indexList) == 0:
-			print('NO MENU ITEMS')
+			print('NO SELECTABLE MENU ITEMS')
 			return -1
 
 		if self._selectedMenu in self.menus and direction == 0:
@@ -91,11 +93,11 @@ class ui(object):
 			nextIndex = currentIndex + direction
 
 			# allow top-down / down-top switching
-			if nextIndex >= len(indexList):  # last element ogf list!
+			if nextIndex >= len(indexList):  # last element of list!
 				self._selectedMenuItemIndex = indexList[0]
 				self._selectedMenuItem = self.menus[self._selectedMenu][self._selectedMenuItemIndex]
 			elif nextIndex < 0:
-				self._selectedMenuItemIndex = indexList[-1]  # last element ogf list!
+				self._selectedMenuItemIndex = indexList[-1]  # last element of list!
 				self._selectedMenuItem = self.menus[self._selectedMenu][self._selectedMenuItemIndex]
 			else:
 				self._selectedMenuItemIndex = indexList[nextIndex]
@@ -170,9 +172,11 @@ if __name__ == "__main__":
 
 			elif event.type == pygame.KEYDOWN:
 				if iUi.interaction(event.key):
-					print "UI catched this key"
+					print "UI catched this key:", event.key
 				else:
 					print "no UI catch, key pressed:", event.key
+					if pygame.K_RETURN == event.key:
+						print "selected item:", iUi.getSelectedItem()
 					
 					if event.key == pygame.K_q:
 						sys.exit(0)

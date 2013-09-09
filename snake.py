@@ -179,7 +179,7 @@ class game(object):
 		self.BLOCKSIZE = 10
 		self.SNACKS = 10
 		self.gameSpeed = 250
-		self.gameSpeedFactors = range(0, 300, 25)
+		self.gameSpeedFactors = range(0, 400, 25)
 		self.gameSpeedFactor = 0
 		pygame.init()
 		
@@ -200,20 +200,17 @@ class game(object):
 		pygame.joystick.init()
 		self.joystickInteract = joystick()
 
-		
 		keymap = {pygame.K_UP:1, pygame.K_RIGHT:2, pygame.K_DOWN:3, pygame.K_LEFT:4}
 
-		
 		self.playerBox = None
 		self.elements = []
 		self.haveToAdd = []
 
-		
 		# The main game loop
 		#
 		gameOver = False
 		doMove = -1
-		#joyButtonDown = False
+
 		while True:
 			if self.playerBox == None:
 				self.resetGame()
@@ -234,7 +231,6 @@ class game(object):
 				elif self.joystickInteract.haveAction() == "restart":
 					self.resetGame()
 
-
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.exit_game()
@@ -252,7 +248,7 @@ class game(object):
 					elif event.key == pygame.K_q:
 						self.exit_game()
 					else:
-						print event.key
+						print "event.key:", event.key
 					#if event.key == pygame.K_UP:
 					#	self.move(1)
 				else:
