@@ -22,7 +22,8 @@ class joystick(object):
 		else:
 			return False
 
-	def haveAction(self):
+	def getAction(self):
+		action = ""
 		if self.myJoystick != None:
 			try:
 				xAx = 0
@@ -44,27 +45,29 @@ class joystick(object):
 					self.doMove = 1
 
 				if self.myJoystick.get_button(0) and self.joyButtonDown == False: # speed up
-					return "speedUp"
+					action = "speedUp"
 				elif self.myJoystick.get_button(1) and self.joyButtonDown == False: # speed down
-					return "speedDown"
+					action = "speedDown"
 				elif (self.myJoystick.get_button(9) and self.joyButtonDown == False)\
 					or (self.myJoystick.get_button(3) and self.joyButtonDown == False): # (re)start
-					return "restart"
-				else:
-					# make sure NO button is down for reset
-					someJoyButtonDown = False
-					for i in range(0, self.myJoystick.get_numbuttons()):
-						if (self.myJoystick.get_button(i)):
-							someJoyButtonDown = True
-					self.joyButtonDown = someJoyButtonDown
+					action = "restart"
+				elif (self.myJoystick.get_button(8) and self.joyButtonDown == False):
+					action = 'quit'
+				#else:
+				# make sure NO button is down for reset
+				someJoyButtonDown = False
+				for i in range(0, self.myJoystick.get_numbuttons()):
+					if (self.myJoystick.get_button(i)):
+						someJoyButtonDown = True
+				self.joyButtonDown = someJoyButtonDown
 
 				if self.doMove != -1:
-					return "move"
+					action = "move"
 			except Exception as ex:
 				print('JOYSTICK ERROR, DEACTIVATING:' + str(ex))
 				self.myJoystick = None
 
-		return ""
+		return action
 
 	def getMoveAction(self):
 		tmp = self.doMove

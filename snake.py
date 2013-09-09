@@ -7,6 +7,7 @@ import random
 import pygame
 from ui import ui
 from joystick import joystick
+from popUp import popUp
 from pygame.sprite import Sprite
 
 #sys.stdout = os.devnull
@@ -56,6 +57,7 @@ class game(object):
 		self.screen = None
 		self.playerBox = None
 		self.ui = None
+		self.popUp = None
 		
 
 	def move(self, direction):
@@ -164,11 +166,20 @@ class game(object):
 		self.gameSpeedFactor += 1
 		if self.gameSpeedFactor >= len(self.gameSpeedFactors):
 			self.gameSpeedFactor -= 1
+		self.speedChanged()
 			
 	def gameSpeedDown(self):
 		self.gameSpeedFactor -= 1
 		if self.gameSpeedFactor < 0:
 			self.gameSpeedFactor = 0
+		self.speedChanged()
+
+	def speedChanged(self):
+		oneBased = self.gameSpeedFactor + 1
+		txt = "|" * oneBased
+		txt = "[" + txt.ljust(len(self.gameSpeedFactors)) + "]"
+
+		self.popUp.singlePopUp(txt)
 
 	def run_game(self):
 		# Game parameters
@@ -196,6 +207,7 @@ class game(object):
 		
 		# init the menu, add stuff later
 		self.iUi = ui(self.screen)
+		self.popUp = popUp(self.screen)
 		
 		pygame.joystick.init()
 		self.joystickInteract = joystick()
@@ -222,19 +234,22 @@ class game(object):
 			worldChanged = False
 
 			if self.joystickInteract.joystickAvailable():
-				if self.joystickInteract.haveAction() == "move":
+				joyAction = self.joystickInteract.getAction()
+				if joyAction == "move":
 					doMove = self.joystickInteract.getMoveAction()
-				elif  self.joystickInteract.haveAction() == "speedUp":
+				elif  joyAction == "speedUp":
 					self.gameSpeedUp()
-				elif self.joystickInteract.haveAction() == "speedDown":
+				elif joyAction == "speedDown":
 					self.gameSpeedDown()
-				elif self.joystickInteract.haveAction() == "restart":
+				elif joyAction == "restart":
 					self.resetGame()
+					gameOver = False
+				elif joyAction == 'quit':
+					self.exit_game()
 
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					self.exit_game()
-
 				elif event.type == pygame.KEYDOWN:
 					if event.key in keymap:
 						doMove = keymap[event.key]
@@ -270,7 +285,7 @@ class game(object):
 				for elem in reversed(self.elements):
 					elem.update()
 				
-				# add elements BEVORE blit is called and they change direction!
+				# add elements BEFORE blit is called and they change direction!
 				# WEIRD stuff would happen otherwise!!!1!!!!!!!!
 				if len(self.haveToAdd) > 0:
 					for i in range(len(self.haveToAdd)):
@@ -283,7 +298,7 @@ class game(object):
 							self.haveToAdd.pop(i)
 							break
 				else:
-					# if theres NOTHING to add to the Snake, add a new snak, if needed
+					# if there is NOTHING to add to the Snake, add a new snak, if needed
 					# preventing from spawning a snack inside the "new" tail of the snake and shit
 					self.addSnack(self.elements)
 				
@@ -291,15 +306,19 @@ class game(object):
 				for elem in reversed(self.elements):
 					elem.blit()
 
-				# if a snak has been eaten, add it to the to add list
+				# draw pop ups
+				self.popUp.drawPopUps()
+
+				# if a snack has been eaten, add it to the to add list
 				snackEaten = self.eatSnack(self.elements)
 				if snackEaten != None:
 					self.haveToAdd.append(snackEaten)
+					self.popUp.singlePopUp(str(self.getBodyLen()))
 				
 				# collision!
 				if self.headDied(self.elements) == True:
 					gameOver = True
-				
+
 				pygame.display.flip()
 
 				
