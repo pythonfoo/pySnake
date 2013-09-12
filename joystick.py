@@ -29,9 +29,13 @@ class joystick(object):
 			try:
 				xAx = 0
 				yAx = 0
+				buttonCount = self.myJoystick.get_numbuttons()
 
 				# sometimes 2 axis, sometimes 6, wtf?!
 				if self.myJoystick.get_numaxes() == 2:
+					xAx = 0
+					yAx = 1
+				elif self.myJoystick.get_numaxes() == 3:
 					xAx = 0
 					yAx = 1
 				else:
@@ -50,11 +54,12 @@ class joystick(object):
 					action = "speedUp"
 				elif self.myJoystick.get_button(1) and self.joyButtonDown is False:  # speed down
 					action = "speedDown"
-				elif (self.myJoystick.get_button(9) and self.joyButtonDown is False)\
-					or (self.myJoystick.get_button(3) and self.joyButtonDown is False):  # (re)start
+				elif (buttonCount > 9 and self.myJoystick.get_button(9) and self.joyButtonDown is False)\
+					or (buttonCount > 3 and  self.myJoystick.get_button(3) and self.joyButtonDown is False):  # (re)start
 					action = "restart"
-				elif self.myJoystick.get_button(8) and self.joyButtonDown is False:
+				elif buttonCount > 8 and self.myJoystick.get_button(8) and self.joyButtonDown is False:
 					action = 'quit'
+
 				#else:
 				# make sure NO button is down for reset
 				someJoyButtonDown = False
