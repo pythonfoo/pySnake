@@ -10,3 +10,7 @@ tiny snake in Python pygame
 * touchscreen compatible
 * full screen and window mode
 * fully customizable
+
+## LICENSE
+
+GPL v2
