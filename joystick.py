@@ -1,5 +1,7 @@
-import pygame
-
+try:
+	import pygame_sdl2 as pygame
+except ImportError:
+	import pygame
 
 class joystick(object):
 	def __init__(self):

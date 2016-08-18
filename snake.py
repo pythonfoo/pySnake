@@ -5,7 +5,11 @@ import os
 #from screen import screen
 import sys
 import random
-import pygame
+try:
+	import pygame_sdl2 as pygame
+except ImportError:
+	print "pygame_sdl2 not found; falling back to pygame."
+	import pygame
 import conf
 from ui import ui
 from joystick import joystick

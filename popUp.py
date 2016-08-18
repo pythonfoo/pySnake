@@ -1,4 +1,8 @@
-import pygame
+try:
+	import pygame_sdl2 as pygame
+except ImportError:
+	print "pygame_sdl2 not found; falling back to pygame."
+	import pygame
 import time
 
 
