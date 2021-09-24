@@ -2,11 +2,11 @@
 
 # notes:
 # The Ten Commandments Of Video Game Menus http://kotaku.com/5955855/the-ten-commandments-of-video-game-menus
-
+from __future__ import print_function
 try:
 	import pygame_sdl2 as pygame
 except ImportError:
-	print "pygame_sdl2 not found; falling back to pygame."
+	print("pygame_sdl2 not found; falling back to pygame.")
 	import pygame
 import sys
 
@@ -183,11 +183,11 @@ if __name__ == "__main__":
 
 			elif event.type == pygame.KEYDOWN:
 				if iUi.interaction(event.key):
-					print "UI catched this key:", event.key
+					print("UI catched this key:", event.key)
 				else:
-					print "no UI catch, key pressed:", event.key
+					print("no UI catch, key pressed:", event.key)
 					if pygame.K_RETURN == event.key:
-						print "selected item:", iUi.getSelectedItem()
+						print("selected item:", iUi.getSelectedItem())
 					
 					if event.key == pygame.K_q:
 						sys.exit(0)

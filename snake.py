@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
-
+from __future__ import print_function
 import os
 #from screen import screen
 import sys
 import random
+
 try:
 	import pygame_sdl2 as pygame
 except ImportError:
-	print "pygame_sdl2 not found; falling back to pygame."
+	print("pygame_sdl2 not found; falling back to pygame.")
 	import pygame
 import conf
 from ui import ui
@@ -292,7 +293,7 @@ class game(object):
 					elif event.key == pygame.K_q:
 						self.exit_game()
 					else:
-						print "event.key:", event.key
+						print("event.key:", event.key)
 					#if event.key == pygame.K_UP:
 					#	self.move(1)
 				else:
@@ -301,7 +302,7 @@ class game(object):
 
 			if conf.TOUCH_SCREEN:
 				mouseAction = self.touchScreen.getEventBoxes()
-				if mouseAction > 0:
+				if mouseAction and mouseAction > 0:
 					if gameOver:
 						self.resetGame()
 						gameOver = False
