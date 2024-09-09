@@ -15,7 +15,7 @@ import conf
 from ui import ui
 from Joystick import Joystick
 from PopUp import PopUp
-from touchScreen import touchScreen
+from TouchScreen import TouchScreen
 
 
 class box(object):
@@ -253,7 +253,7 @@ class game(object):
 		self.iUi = ui(self.screen)
 		self.popUp = PopUp(self.screen)
 		self.popUp.color = conf.FONT_COLOR
-		self.touchScreen = touchScreen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+		self.touchScreen = TouchScreen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
 		
 		pygame.joystick.init()
 		self.joystickInteract = Joystick()

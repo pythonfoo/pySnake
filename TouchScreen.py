@@ -7,7 +7,7 @@ except ImportError:
 	import pygame
 
 
-class touchScreen(object):
+class TouchScreen(object):
 	def __init__(self, width, height):
 		self.width = width
 		self.height = height
