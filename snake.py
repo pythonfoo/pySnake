@@ -14,7 +14,7 @@ except ImportError:
 import conf
 from ui import ui
 from Joystick import Joystick
-from popUp import popUp
+from PopUp import PopUp
 from touchScreen import touchScreen
 
 
@@ -251,7 +251,7 @@ class game(object):
 		
 		# init the menu, add stuff later
 		self.iUi = ui(self.screen)
-		self.popUp = popUp(self.screen)
+		self.popUp = PopUp(self.screen)
 		self.popUp.color = conf.FONT_COLOR
 		self.touchScreen = touchScreen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
 		

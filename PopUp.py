@@ -7,7 +7,7 @@ except ImportError:
 import time
 
 
-class popUp(object):
+class PopUp(object):
 	def __init__(self, screen):
 		self._screen = screen
 		self.fnt = pygame.font.SysFont("MS Comic Sans", 30)
