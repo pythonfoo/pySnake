@@ -13,7 +13,7 @@ except ImportError:
 
 import conf
 from ui import ui
-from joystick import joystick
+from Joystick import Joystick
 from popUp import popUp
 from touchScreen import touchScreen
 
@@ -256,7 +256,7 @@ class game(object):
 		self.touchScreen = touchScreen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
 		
 		pygame.joystick.init()
-		self.joystickInteract = joystick()
+		self.joystickInteract = Joystick()
 
 		keymap = {
 			pygame.K_UP: 1,

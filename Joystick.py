@@ -4,7 +4,7 @@ except ImportError:
 	import pygame
 
 
-class joystick(object):
+class Joystick(object):
 	def __init__(self):
 		self.joystick_names = []
 		self.doMove = -1
@@ -52,7 +52,7 @@ class joystick(object):
 					someJoyButtonDown = True
 			self.joyButtonDown = someJoyButtonDown
 
-			if self.doMove != -1:
+			if self.doMove != -1 and not action:
 				action = "move"
 
 		except Exception as ex:
