@@ -11,7 +11,7 @@ except ImportError:
 import sys
 
 
-class ui(object):
+class Ui(object):
 	def __init__(self, screen):
 		
 		# the main screen, result from:
@@ -165,7 +165,7 @@ if __name__ == "__main__":
 	
 	BG_COLOR = (8, 13, 41)
 	
-	iUi = ui(screen)
+	iUi = Ui(screen)
 	iUi.addMenu("main",
 		[
 			{"rowName":"title", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"UserInterfaceGenerator"},

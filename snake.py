@@ -12,7 +12,7 @@ except ImportError:
 	import pygame
 
 import conf
-from ui import ui
+from Ui import Ui
 from Joystick import Joystick
 from PopUp import PopUp
 from TouchScreen import TouchScreen
@@ -250,7 +250,7 @@ class game(object):
 		redrawCount = 0
 		
 		# init the menu, add stuff later
-		self.iUi = ui(self.screen)
+		self.iUi = Ui(self.screen)
 		self.popUp = PopUp(self.screen)
 		self.popUp.color = conf.FONT_COLOR
 		self.touchScreen = TouchScreen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
