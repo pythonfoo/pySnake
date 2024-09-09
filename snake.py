@@ -16,46 +16,7 @@ from Ui import Ui
 from Joystick import Joystick
 from PopUp import PopUp
 from TouchScreen import TouchScreen
-
-
-class box(object):
-	def __init__(self, screen, blockSize, x, y, bType='body'):
-		self.screen = screen
-		self.blockSize = blockSize
-		self.direction = 2
-		self.bType = bType
-		self.x = x
-		self.y = y
-		self.color = conf.SNAKE_COLOR
-		self.back = None
-		self.directionChanged = 0
-	
-	def getDirection(self):
-		return self.direction
-	
-	def setDirection(self, direction):
-		#self.directionChanged = 1
-		self.direction = direction
-		
-	def update(self):
-		if self.direction == 1:
-			self.y -= 1
-		elif self.direction == 2:
-			self.x += 1
-		elif self.direction == 3:
-			self.y += 1
-		elif self.direction == 4:
-			self.x -= 1
-
-		#if self.back != None:
-		#	self.back.setDirection(self.direction)
-
-	def blit(self):
-		relX = self.x * self.blockSize
-		relY = self.y * self.blockSize
-		pygame.draw.rect(self.screen, self.color, (relX, relY, self.blockSize, self.blockSize))
-		if self.back is not None:
-			self.back.setDirection(self.direction)
+from Box import Box
 
 
 class game(object):
@@ -140,7 +101,7 @@ class game(object):
 			]
 
 			if not xy in coords:
-				snack = box(self.screen, self.BLOCKSIZE, xy[0], xy[1])
+				snack = Box(self.screen, self.BLOCKSIZE, xy[0], xy[1])
 				snack.bType = 'snack'
 				snack.color = conf.SNACK_COLOR
 				snack.direction = 0
@@ -200,7 +161,7 @@ class game(object):
 
 	def resetGame(self):
 		self.screen.fill((0, 0, 0))
-		self.playerBox = box(self.screen, self.BLOCKSIZE, 3, 3)
+		self.playerBox = Box(self.screen, self.BLOCKSIZE, 3, 3)
 		self.playerBox.bType = 'head'
 		
 		self.elements = []
@@ -350,7 +311,7 @@ class game(object):
 						coords = self.haveToAdd[i]
 						if self.fieldContainsBox(coords[0], coords[1]) is False:
 							lastElem = self.getLastElement()
-							lastElem.back = box(self.screen, self.BLOCKSIZE, coords[0], coords[1])
+							lastElem.back = Box(self.screen, self.BLOCKSIZE, coords[0], coords[1])
 							lastElem.back.setDirection(lastElem.getDirection())
 							self.elements.append(self.getLastElement())
 							self.haveToAdd.pop(i)
