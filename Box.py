@@ -1,7 +1,4 @@
-try:
-    import pygame_sdl2 as pygame
-except ImportError:
-    import pygame
+import pygame
 
 import conf
 

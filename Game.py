@@ -1,15 +1,7 @@
-#!/usr/bin/env python
-
-from __future__ import print_function
 import os
 import sys
 import random
-
-try:
-	import pygame_sdl2 as pygame
-except ImportError:
-	print("pygame_sdl2 not found; falling back to pygame.")
-	import pygame
+import pygame
 
 import conf
 from Ui import Ui

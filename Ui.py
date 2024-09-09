@@ -2,12 +2,8 @@
 
 # notes:
 # The Ten Commandments Of Video Game Menus http://kotaku.com/5955855/the-ten-commandments-of-video-game-menus
-from __future__ import print_function
-try:
-	import pygame_sdl2 as pygame
-except ImportError:
-	print("pygame_sdl2 not found; falling back to pygame.")
-	import pygame
+
+import pygame
 import sys
 
 
