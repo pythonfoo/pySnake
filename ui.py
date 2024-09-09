@@ -47,30 +47,33 @@ class ui(object):
 		return canInteract
 	
 	def addMenu(self, menuKey, menuRows):
-		""" add an menu
+		""" add a menu
 		@menuKey: unique name of the menu
 		@menuRows: [
-					{"rowName":"title", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"UserInterfaceGenerator"},
-					{"rowName":"start", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"Start Game"},
-					{"rowName":"q", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"QUIT"}
-					]
+			{"rowName":"title", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"UserInterfaceGenerator"},
+			{"rowName":"start", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"Start Game"},
+			{"rowName":"q", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"QUIT"}
+		]
 		"""
 		self.menus[menuKey] = menuRows
 
 	def addSimpleMenu(self, menuKey, menuRows, font="MS Comic Sans", size=30, color=(245, 101, 44)):
 		""" add an SIMPLE menu
 			@menuKey: unique name of the menu
-			@menueRows: ["You Shall", "NOT PASS"]
+			@menuRows: ["You Shall", "NOT PASS"]
 		"""
 		menu = []
 		rowCount = 0
 		for row in menuRows:
-			menu.append({"rowName": "simple_" + str(rowCount),
-						"selectable": False,
-						"font": font,
-						"fontSize": size,
-						"color": color,
-						"text": row}
+			menu.append(
+				{
+					"rowName": "simple_" + str(rowCount),
+					"selectable": False,
+					"font": font,
+					"fontSize": size,
+					"color": color,
+					"text": row
+				}
 			)
 		
 		self.menus[menuKey] = menu
@@ -151,7 +154,7 @@ class ui(object):
 				if i == self._selectedMenuItemIndex:
 					color = self.selectedColor
 
-				self._screen.blit(fnt.render(txt, 1, color), (xPos - (fnt.size(txt)[0] / 2), yPos + (i * fontSize)))
+				self._screen.blit(fnt.render(txt, True, color), (xPos - (fnt.size(txt)[0] / 2), yPos + (i * fontSize)))
 		else:
 			raise Exception("Error menu '" + menuKey + "' does not exist")
 		
@@ -163,18 +166,19 @@ if __name__ == "__main__":
 	BG_COLOR = (8, 13, 41)
 	
 	iUi = ui(screen)
-	iUi.addMenu("main", [
-						{"rowName":"title", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"UserInterfaceGenerator"},
-						{"rowName":"start", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"Start Game"},
-						{"rowName":"info",  "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"1NF0$"},
-						{"rowName":"q",     "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"QUIT"},
-	                    {"rowName":"notes",  "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"sometext"},
-						]
-				)
+	iUi.addMenu("main",
+		[
+			{"rowName":"title", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"UserInterfaceGenerator"},
+			{"rowName":"start", "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(0,0,255), "text":"Start Game"},
+			{"rowName":"info",  "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"1NF0$"},
+			{"rowName":"q",     "selectable":True, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"QUIT"},
+			{"rowName":"notes", "selectable":False, "font":"MS Comic Sans", "fontSize":30, "color":(123,55,255), "text":"sometext"},
+		]
+	)
 	
 	while True:	
-		# Limit frame speed to 50 FPS
-		time_passed = clock.tick(50)
+		# Limit frame rate to 60 FPS
+		time_passed = clock.tick(60)
 		screen.fill(BG_COLOR)
 		
 		for event in pygame.event.get():

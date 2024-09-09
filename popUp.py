@@ -36,13 +36,13 @@ class popUp(object):
 				self.popUps.pop(i)
 				break
 
-		for popUp in self.popUps:
-			fullText += popUp['txt'] + " "
+		for _popUp in self.popUps:
+			fullText += _popUp['txt'] + " "
 
 		# TODO: multilines!
 		# http://stackoverflow.com/questions/2770886/pygames-message-multiple-lines
 		if fullText != "":
 			xPos = (self._screen.get_width() / 2)
-			self._screen.blit(self.fnt.render(fullText, 1, self.color), (xPos - (self.fnt.size(fullText)[0] / 2), 5))
+			self._screen.blit(self.fnt.render(fullText, True, self.color), (xPos - (self.fnt.size(fullText)[0] / 2), 5))
 
 		return True

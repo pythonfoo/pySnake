@@ -1,13 +1,12 @@
 # screen settings
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-#SCREEN_WIDTH = 1152
-#SCREEN_HEIGHT = 864
+
 FULLSCREEN = False
 
 # window settings
 WINDOW_POSITION_X = 0
-WINDOW_POSITION_Y = 0
+WINDOW_POSITION_Y = 42  # the border might be "out of screen" if set to 0
 WINDOW_BORDER = True
 
 # UI settings

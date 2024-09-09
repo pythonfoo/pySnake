@@ -3,6 +3,7 @@ try:
 except ImportError:
 	import pygame
 
+
 class joystick(object):
 	def __init__(self):
 		self.joystick_names = []
@@ -27,56 +28,70 @@ class joystick(object):
 
 	def getAction(self):
 		action = ""
-		if self.myJoystick is not None:
-			try:
-				xAx = 0
-				yAx = 0
-				buttonCount = self.myJoystick.get_numbuttons()
 
-				# sometimes 2 axis, sometimes 6, wtf?!
-				if self.myJoystick.get_numaxes() == 2:
-					xAx = 0
-					yAx = 1
-				elif self.myJoystick.get_numaxes() == 3:
-					xAx = 0
-					yAx = 1
-				else:
-					xAx = 3
-					yAx = 4
-				if self.myJoystick.get_axis(xAx) > 0:
-					self.doMove = 2
-				elif self.myJoystick.get_axis(xAx) < 0:
-					self.doMove = 4
-				elif self.myJoystick.get_axis(yAx) > 0:
-					self.doMove = 3
-				elif self.myJoystick.get_axis(yAx) < 0:
-					self.doMove = 1
+		if self.myJoystick is None:
+			return action
 
-				if self.myJoystick.get_button(0) and self.joyButtonDown is False:  # speed up
-					action = "speedUp"
-				elif self.myJoystick.get_button(1) and self.joyButtonDown is False:  # speed down
-					action = "speedDown"
-				elif (buttonCount > 9 and self.myJoystick.get_button(9) and self.joyButtonDown is False)\
-					or (buttonCount > 3 and  self.myJoystick.get_button(3) and self.joyButtonDown is False):  # (re)start
-					action = "restart"
-				elif buttonCount > 8 and self.myJoystick.get_button(8) and self.joyButtonDown is False:
-					action = 'quit'
+		try:
+			buttonCount = self.myJoystick.get_numbuttons()
 
-				#else:
-				# make sure NO button is down for reset
-				someJoyButtonDown = False
-				for i in range(0, self.myJoystick.get_numbuttons()):
-					if self.myJoystick.get_button(i) == True:
-						someJoyButtonDown = True
-				self.joyButtonDown = someJoyButtonDown
+			if self.myJoystick.get_button(0) and self.joyButtonDown is False:  # speed up
+				action = "speedUp"
+			elif self.myJoystick.get_button(1) and self.joyButtonDown is False:  # speed down
+				action = "speedDown"
+			elif (buttonCount > 9 and self.myJoystick.get_button(9) and self.joyButtonDown is False)\
+				or (buttonCount > 3 and  self.myJoystick.get_button(3) and self.joyButtonDown is False):  # (re)start
+				action = "restart"
+			elif buttonCount > 8 and self.myJoystick.get_button(8) and self.joyButtonDown is False:
+				action = 'quit'
 
-				if self.doMove != -1:
-					action = "move"
-			except Exception as ex:
-				print('JOYSTICK ERROR, DEACTIVATING:' + str(ex))
-				self.myJoystick = None
+			# make sure NO button is down for reset
+			someJoyButtonDown = False
+			for i in range(0, self.myJoystick.get_numbuttons()):
+				if self.myJoystick.get_button(i):
+					someJoyButtonDown = True
+			self.joyButtonDown = someJoyButtonDown
+
+			if self.doMove != -1:
+				action = "move"
+
+		except Exception as ex:
+			print('JOYSTICK ERROR, DEACTIVATING:' + str(ex))
+			self.myJoystick = None
 
 		return action
+
+	def processAxis(self):
+		if self.myJoystick is None:
+			return
+
+		try:
+			xAx = 0
+			yAx = 0
+
+			# sometimes 2 axis, sometimes 6, wtf?! (X-Box controller)
+			if self.myJoystick.get_numaxes() == 2:
+				xAx = 0
+				yAx = 1
+			elif self.myJoystick.get_numaxes() == 3:
+				xAx = 0
+				yAx = 1
+			else:
+				xAx = 3
+				yAx = 4
+
+			if self.myJoystick.get_axis(xAx) > 0:
+				self.doMove = 2
+			elif self.myJoystick.get_axis(xAx) < 0:
+				self.doMove = 4
+			elif self.myJoystick.get_axis(yAx) > 0:
+				self.doMove = 3
+			elif self.myJoystick.get_axis(yAx) < 0:
+				self.doMove = 1
+
+		except Exception as ex:
+			print('JOYSTICK ERROR, DEACTIVATING:' + str(ex))
+			self.myJoystick = None
 
 	def getMoveAction(self):
 		tmp = self.doMove

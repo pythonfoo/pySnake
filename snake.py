@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 import os
-#from screen import screen
 import sys
 import random
 
@@ -11,15 +10,12 @@ try:
 except ImportError:
 	print("pygame_sdl2 not found; falling back to pygame.")
 	import pygame
+
 import conf
 from ui import ui
 from joystick import joystick
 from popUp import popUp
 from touchScreen import touchScreen
-#from pygame.sprite import Sprite
-
-#sys.stdout = os.devnull
-#sys.stderr = os.devnull
 
 
 class box(object):
@@ -67,11 +63,30 @@ class game(object):
 		self.screen = None
 		self.playerBox = None
 		self.ui = None
+		self.iUi = None
 		self.popUp = None
 		self.touchScreen = None
+
+		# Game parameters
+		self.SCREEN_WIDTH = conf.SCREEN_WIDTH
+		self.SCREEN_HEIGHT = conf.SCREEN_HEIGHT
+		self.DRAW_RECT = None  # must be set after pygame initialisation
+		self.BG_COLOR = conf.BG_COLOR
+		self.BLOCKSIZE = conf.BLOCKSIZE
+		self.SNACKS = conf.SNACKS
+		self.REST_WITH = self.SCREEN_WIDTH % self.BLOCKSIZE
+		self.REST_HEIGHT = self.SCREEN_HEIGHT % self.BLOCKSIZE
+
+		self.gameSpeed = 250
+		self.gameSpeedFactors = range(0, 400, 25)
+		self.gameSpeedFactor = 0
+
+		self.joystickInteract = None  # must be set after pygame initialisation
+		self.elements = []
+		self.haveToAdd = []
+
 		
 	def move(self, direction):
-		#print 'direction:', direction
 		if self.playerBox is not None:
 			curDir = self.playerBox.getDirection()
 			# DONT move backwards!
@@ -95,15 +110,18 @@ class game(object):
 	def getBodyLen(self):
 		tmp = self.playerBox
 		cnt = 0
+
 		while tmp is not None:
 			tmp = tmp.back
 			cnt += 1
+
 		return cnt
 	
-	def fieldContainsBox(self, elements, x, y):
-		for elem in elements:
+	def fieldContainsBox(self, x, y):
+		for elem in self.elements:
 			if elem.x == x and elem.y == y:
 				return True
+
 		return False
 		
 	def addSnack(self, elements):
@@ -120,6 +138,7 @@ class game(object):
 				random.randint(1, (self.SCREEN_WIDTH / self.BLOCKSIZE)-1),
 				random.randint(1, (self.SCREEN_HEIGHT / self.BLOCKSIZE)-1)
 			]
+
 			if not xy in coords:
 				snack = box(self.screen, self.BLOCKSIZE, xy[0], xy[1])
 				snack.bType = 'snack'
@@ -132,6 +151,7 @@ class game(object):
 			if elem.bType == 'snack' and elem.x == self.playerBox.x and elem.y == self.playerBox.y:
 				elements.remove(elem)
 				return self.playerBox.x, self.playerBox.y
+
 		return None
 
 	def headDied(self, elements):
@@ -151,6 +171,7 @@ class game(object):
 		if dead:
 			highscores = '0'
 			scores = self.getBodyLen()
+
 			if os.path.isfile("highscore.txt") is True:
 				f = open("highscore.txt", 'r')
 				highscores = f.read()
@@ -163,11 +184,16 @@ class game(object):
 				f.close()
 
 			self.iUi.addSimpleMenu("gameOver",
-									["GAME OVER", "POINTS: " + str(scores), "HIGHSCORE "+highscores,
-									"Button / Keyboard: 2 = Speed Up",
-									"Button / Keyboard: 1 = Speed Down",
-									"R = restart / respawn",
-									"Q = Quit / Exit"], color=conf.FONT_COLOR)
+				[
+					"GAME OVER", "POINTS: " + str(scores), "HIGHSCORE "+highscores,
+					"Button / Keyboard: 2 = Speed Up",
+					"Button / Keyboard: 1 = Speed Down",
+					"R = restart / respawn",
+					"Q = Quit / Exit"
+				],
+				color=conf.FONT_COLOR
+			)
+
 			self.iUi.draw("gameOver")
 
 		return dead
@@ -202,23 +228,11 @@ class game(object):
 		self.popUp.singlePopUp(txt)
 
 	def run_game(self):
-		# Game parameters
-		self.SCREEN_WIDTH = conf.SCREEN_WIDTH
-		self.SCREEN_HEIGHT = conf.SCREEN_HEIGHT
-		BG_COLOR = conf.BG_COLOR
-		self.BLOCKSIZE = conf.BLOCKSIZE
-		self.SNACKS = conf.SNACKS
-		self.gameSpeed = 250
-		self.gameSpeedFactors = range(0, 400, 25)
-		self.gameSpeedFactor = 0
 		pygame.init()
-
-		self.REST_WITH = self.SCREEN_WIDTH % self.BLOCKSIZE
-		self.REST_HEIGHT = self.SCREEN_HEIGHT % self.BLOCKSIZE
 		self.DRAW_RECT = pygame.Rect(0, 0, self.SCREEN_WIDTH - self.REST_WITH, self.SCREEN_HEIGHT - self.REST_HEIGHT)
+
 		# do fancy window stuff
 		pygame.display.set_caption("pySnake")
-		#pygame.display.set_icon(pygame.image.load('imgs/bandit.jpg'))
 		pygame.mouse.set_visible(False)
 
 		if not conf.FULLSCREEN:
@@ -244,14 +258,18 @@ class game(object):
 		pygame.joystick.init()
 		self.joystickInteract = joystick()
 
-		keymap = {pygame.K_UP: 1, pygame.K_RIGHT: 2, pygame.K_DOWN: 3, pygame.K_LEFT: 4}
+		keymap = {
+			pygame.K_UP: 1,
+			pygame.K_RIGHT: 2,
+			pygame.K_DOWN: 3,
+			pygame.K_LEFT: 4
+		}
 
 		self.playerBox = None
 		self.elements = []
 		self.haveToAdd = []
 
 		# The main game loop
-		#
 		gameOver = False
 		doMove = -1
 		while True:
@@ -259,12 +277,13 @@ class game(object):
 				self.resetGame()
 			
 			# Limit frame speed to 50 FPS
-			#
 			time_passed = clock.tick(50)
 			redrawCount += time_passed
 
 			if self.joystickInteract.joystickAvailable():
+				self.joystickInteract.processAxis()
 				joyAction = self.joystickInteract.getAction()
+
 				if joyAction == "move":
 					doMove = self.joystickInteract.getMoveAction()
 				elif joyAction == "speedUp":
@@ -294,8 +313,7 @@ class game(object):
 						self.exit_game()
 					else:
 						print("event.key:", event.key)
-					#if event.key == pygame.K_UP:
-					#	self.move(1)
+
 				else:
 					pass
 					#print event
@@ -311,7 +329,7 @@ class game(object):
 
 			if gameOver is False and redrawCount >= (self.gameSpeed - self.gameSpeedFactors[self.gameSpeedFactor]):
 				# ONLY move, when the timer elapses!
-				# otherwise you could change the direction multiple times before the scenery changes and upates
+				# otherwise you could change the direction multiple times before the scenery changes and updates
 				# strange shit goes on!
 				if doMove != -1:
 					self.move(doMove)
@@ -319,7 +337,7 @@ class game(object):
 					
 				redrawCount = 0
 
-				self.screen.fill(BG_COLOR, self.DRAW_RECT)
+				self.screen.fill(self.BG_COLOR, self.DRAW_RECT)
 				
 				# move the elements
 				for elem in reversed(self.elements):
@@ -330,7 +348,7 @@ class game(object):
 				if len(self.haveToAdd) > 0:
 					for i in range(len(self.haveToAdd)):
 						coords = self.haveToAdd[i]
-						if self.fieldContainsBox(self.elements, coords[0], coords[1]) is False:
+						if self.fieldContainsBox(coords[0], coords[1]) is False:
 							lastElem = self.getLastElement()
 							lastElem.back = box(self.screen, self.BLOCKSIZE, coords[0], coords[1])
 							lastElem.back.setDirection(lastElem.getDirection())
@@ -338,7 +356,7 @@ class game(object):
 							self.haveToAdd.pop(i)
 							break
 				else:
-					# if there is NOTHING to add to the Snake, add a new snak, if needed
+					# if there is NOTHING to add to the Snake, add a new snack, if needed
 					# preventing from spawning a snack inside the "new" tail of the snake and shit
 					self.addSnack(self.elements)
 				
@@ -349,7 +367,7 @@ class game(object):
 				# draw touchscreen
 				# TODO: draw touch areas
 
-				# draw pop ups
+				# draw popups
 				self.popUp.drawPopUps()
 
 				# if a snack has been eaten, add it to the to add list

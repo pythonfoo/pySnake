@@ -6,6 +6,7 @@ except ImportError:
 	print("pygame_sdl2 not found; falling back to pygame.")
 	import pygame
 
+
 class touchScreen(object):
 	def __init__(self, width, height):
 		self.width = width
@@ -24,5 +25,6 @@ class touchScreen(object):
 		for i in range(len(self.regions)):
 			mPosX, mPosY = pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0] and self.regions[i].collidepoint(mPosX, mPosY):
-				#print("HIT AREA:" + str(i))
 				return i + 1
+
+		return -1
