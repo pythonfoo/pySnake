@@ -345,7 +345,3 @@ class game(object):
 
 	def exit_game(self):
 		sys.exit()
-		
-		
-snk = game()
-snk.run_game()
